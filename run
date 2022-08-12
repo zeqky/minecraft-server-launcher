@@ -1,0 +1,21 @@
+#!/bin/bash
+
+SERVER="paper-1.19.2-latest"
+
+DIR=".server"
+
+RESTART=false
+
+BACKUP=false
+
+PLAYER=100
+
+WORLD="world"
+
+mkdir -p DIR && cd DIR || exit
+
+[[ -f ../serverSetup ]] && cp ../serverSetup .
+[[ ! -f ../serverSetup ]] && wget -q -c --content-disposition -P . -N "https://rawgithubusercontent.com/monull/minecraft-server-launcher/master/server/serverSetup" > /dev/null
+
+chmod +x ./serverSetup
+./serverSetup
