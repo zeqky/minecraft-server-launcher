@@ -1,0 +1,3 @@
+#!/bin/bash
+
+IFS=- read -r server version build <<<"$1"

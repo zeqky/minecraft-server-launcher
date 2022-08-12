@@ -1,3 +1,8 @@
 #!/bin/bash
 
-echo "hello world"
+if [[ -z $JAR ]]; then
+  [[ -f ../downloadServer ]] && cp ../downloadServer .
+  [[ ! -f downloadServer ]] && wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monull/minecraft-server-launcher/master/server/downloadServer"
+  chmod +x ./downloadServer
+  ./downloadServer
+fi

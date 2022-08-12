@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set +a
+
 SERVER="paper-1.19.2-latest"
 
 DIR=".server"
@@ -12,10 +14,12 @@ PLAYER=100
 
 WORLD="world"
 
-mkdir -p DIR && cd DIR || exit
+set +a
+
+mkdir -p "$DIR" && cd "$DIR" || exit
 
 [[ -f ../serverSetup ]] && cp ../serverSetup .
-[[ ! -f ../serverSetup ]] && wget -q -c --content-disposition -P . -N "https://rawgithubusercontent.com/monull/minecraft-server-launcher/master/server/serverSetup" > /dev/null
+[[ ! -f serverSetup ]] && wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monull/minecraft-server-launcher/master/server/serverSetup" > /dev/null
 
 chmod +x ./serverSetup
 ./serverSetup
