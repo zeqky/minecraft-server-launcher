@@ -1,3 +1,45 @@
 #!/bin/bash
 
 IFS=- read -r server version build <<<"$1"
+[[ -z $server ]] && server="unspecified"
+[[ -z $version ]] && version="unspecified"
+[[ -z $build ]] && build="unspecified"
+
+[[ -f .server ]] && IFS=- read -r prev_server prev_version prev_build <<<"$(cat .server)"
+[[ -z $prev_server ]] && prev_server="unspecified"
+[[ -z $prev_version ]] && prev_version="unspecified"
+
+[[ $server == "unspecified" ]] && server=$prev_server
+[[ $version == "unspecified" ]] && version=$prev_version
+[[ $build == "unspecified" ]] && build=$prev_build
+
+# Exit if version is unspecified
+[[ $version == "unspecified" ]] && exit
+
+# Set build to unspecified if different version or different server
+[[ "$server" != "$prev_server" || "$version" != "$prev_version" ]] && build="unspecified"
+
+repo="$HOME/.mcservers/$server"
+mkdir -p "$repo"
+
+# Paper
+if [[ $server == "paper" ]]; then
+  # Use latest build when the build is 'latest' or 'unspecified'
+  [[ $build == "latest" || $build == "unspecified" ]] && build=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version" | jq -r .builds[-1])
+
+  download="application"
+  [[ $dev == "dev" ]] && download="mojang-mappings"
+  downloadFile=$(curl -s "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build" | jq -r .downloads.\"$download\".name)
+  jar="$repo/$downloadFile"
+
+  # Download paper if jar not exists
+  if [[ ! -f $jar ]]; then
+    wget -q "https://papermc.io/api/v2/projects/paper/versions/$version/builds/$build/downloads/$downloadFile" -O "$jar"
+  fi
+fi
+
+# Write server info to '.server'
+[[ -n $jar ]] && echo "$server-$version-$build" >.server
+
+# Print the server file path
+echo "$jar"

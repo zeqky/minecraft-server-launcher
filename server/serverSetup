@@ -1,8 +1,18 @@
 #!/bin/bash
 
+[[ -f $SERVER ]] && JAR=$SERVER
+
 if [[ -z $JAR ]]; then
   [[ -f ../downloadServer ]] && cp ../downloadServer .
   [[ ! -f downloadServer ]] && wget -q -c --content-disposition -P . -N "https://raw.githubusercontent.com/monull/minecraft-server-launcher/master/server/downloadServer"
   chmod +x ./downloadServer
-  ./downloadServer
+  JAR=$(./downloadServer $SERVER)
 fi
+
+# Exit if jar not found
+[[ ! -f $JAR ]] && echo "Jar not found for $SERVER - $JAR" && exit
+
+export JAR
+
+chmod +x ./startServer.sh
+./startServer.sh launch
