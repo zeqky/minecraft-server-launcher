@@ -1,0 +1,7 @@
+#!/bin/bash
+
+IFS=- read -r server version build <<<"$1"
+
+if [ "$server" == "paper" ]; then
+
+fi
