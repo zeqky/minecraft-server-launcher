@@ -1,0 +1,24 @@
+#!/bin/bash
+
+[[ -f ../args.aikar ]] && cp ../args.aikar .
+[[ ! -f args.aikar ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/args/args.aikar" > /dev/null
+
+
+
+jvm_args=(
+  "-Xmx${MEMORY}G"
+  "-Xms${MEMORY}G"
+  "-Dfile.encoding=UTF-8"
+  "-Dcom.mojang.eula.agree=true"
+)
+
+[[ -f "args.aikar" ]] || wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/args/args.aikar" > /dev/null
+source args.aikar
+
+jvm_args+=(
+  "-jar"
+  "$jar"
+  "--nogui"
+)
+
+  java "${jvm_args[@]}"

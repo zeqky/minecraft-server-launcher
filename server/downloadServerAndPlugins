@@ -1,0 +1,25 @@
+#!/bin/bash
+
+repo="$HOME/.mcservers/$server"
+mkdir -p "$repo"
+
+IFS=- read -r server version build mapped <<<"$1"
+
+if [ "$server" == "paper" ]; then
+  [[ $build == "latest" ]] && build=$(curl -s "https://api.papermc.io/v2/projects/$server/versions/$version" | jq -r .builds[-1])
+
+  download="application"
+  [[ $mapped == "mapped" ]] && download="mojang-mappings"
+  downloadFile=$(curl -s "https://api.papermc.io/v2/projects/$server/versions/$version/builds/$build" | jq -r .downloads.$download.name)
+  jar="$repo/$downloadFile"
+
+  [[ ! -f $jar ]] && wget -q "https://api.papermc.io/v2/projects/$server/versions/$version/builds/$build/downloads/$downloadFile" -O "$jar"
+fi
+
+export jar
+
+[[ -f ../executeServer ]] && cp ../executeServer .
+[[ ! -f executeServer ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/executeServer" > /dev/null
+
+chmod +x ./executeServer
+./executeServer "$jar"

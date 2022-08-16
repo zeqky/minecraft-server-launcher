@@ -10,12 +10,14 @@ SERVER="paper-1.19.2-latest"
 
 DIR=".server"
 
+MEMORY=4
+
 set +a
 
 mkdir -p "$DIR" && cd "$DIR" || exit
 
-[[ -f ../serverSetup ]] && cp ../serverSetup .
-[[ ! -f serverSetup ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/serverSetup" > /dev/null
+[[ -f ../downloadServerAndPlugins ]] && cp ../downloadServerAndPlugins .
+[[ ! -f downloadServerAndPlugins ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/downloadServerAndPlugins" > /dev/null
 
-chmod +x ./serverSetup
-./serverSetup
+chmod +x ./downloadServerAndPlugins
+./downloadServerAndPlugins "$SERVER"
