@@ -5,6 +5,23 @@ mkdir -p "$repo"
 
 IFS=- read -r server version build mapped <<<"$1"
 
+[[ -z $server ]] && server="unspecified"
+[[ -z $version ]] && version="unspecified"
+[[ -z $build ]] && build="unspecified"
+
+[[ -f .server ]] && IFS=- read -r prev_server prev_version prev_build <<<"$(cat .server)"
+[[ -z $prev_server ]] && prev_server="unspecified"
+[[ -z $prev_version ]] && prev_version="unspecified"
+
+[[ $server == "unspecified" ]] && server=$prev_server
+[[ $version == "unspecified" ]] && version=$prev_version
+[[ $build == "unspecified" ]] && build=$prev_build
+
+[[ $version == "unspecified" ]] && exit
+
+[[ "$server" != "$prev_server" || "$version" != "$prev_version" ]] && build="unspecified"
+
+
 if [ "$server" == "paper" ]; then
   [[ $build == "latest" ]] && build=$(curl -s "https://api.papermc.io/v2/projects/$server/versions/$version" | jq -r .builds[-1])
 
@@ -18,8 +35,12 @@ fi
 
 export jar
 
+for PLUGIN in "${PLUGINS[@]}"; do
+  echo "${PLUGINS[PLUGIN]}"
+done
+
 [[ -f ../executeServer ]] && cp ../executeServer .
 [[ ! -f executeServer ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/executeServer" > /dev/null
 
 chmod +x ./executeServer
-./executeServer "$jar"
+./executeServer

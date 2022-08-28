@@ -2,7 +2,7 @@
 
 set -a
 
-REPO="https://raw.githubusercontent.com/monull/minecraft-server-launcher"
+REPO="https://raw.githubusercontent.com/zeqky/minecraft-server-launcher"
 
 BRANCH="master"
 
@@ -12,12 +12,27 @@ DIR=".server"
 
 MEMORY=4
 
+PLUGINS=(
+  "one"
+  "two"
+)
+
+PLAYERS=100
+
+WORLDSF="worlds"
+
+PLUGINSF="plugins"
+
+PORT=-1
+
+DEBUG_PORT=-1
+
 set +a
 
 mkdir -p "$DIR" && cd "$DIR" || exit
 
-[[ -f ../downloadServerAndPlugins ]] && cp ../downloadServerAndPlugins .
-[[ ! -f downloadServerAndPlugins ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/downloadServerAndPlugins" > /dev/null
+[[ -f ../downloadPlugins ]] && cp ../downloadPlugins .
+[[ ! -f downloadPlugins ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/startSetup" > /dev/null
 
-chmod +x ./downloadServerAndPlugins
-./downloadServerAndPlugins "$SERVER"
+chmod +x ./downloadPlugins
+./downloadPlugins "${PLUGINS[@]}"

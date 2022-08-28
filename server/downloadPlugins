@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Check wget
+! type -p wget >/dev/null && echo "wget not found" && exit
+
+# Check jq
+! type -p jq >/dev/null && echo "jq not found" && exit
+
+# Check java
+! type -p java >/dev/null && echo "java not found" && exit
+
+# Download plugins (Only if it's not vanilla)
+if [[ $SERVER != vanilla* ]]; then
+  dest="$PLUGINS"
+  [[ -z $dest ]] && dest="./plugins"
+
+  mkdir -p "$dest"
+  for i in "$@"; do
+    wget -q -c --content-disposition -P "$dest" -N "$i"
+  done
+fi
+
+[[ -f $SERVER ]] && JAR=$SERVER
+
+[[ ! -f ./downloadServer.sh ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/downloadServer.sh" >/dev/null
+
+chmod +x ./downloadServer.sh
+./downloadServer.sh $SERVER

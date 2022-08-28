@@ -15,10 +15,27 @@ jvm_args=(
 [[ -f "args.aikar" ]] || wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/args/args.aikar" > /dev/null
 source args.aikar
 
+if [[ $DEBUG_PORT -gt -1 ]]; then
+    java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
+
+    if [ "$(printf '%s\n' "$java_version" "9" | sort -V | head -n1)" = "9" ]; then
+      echo "DEBUG MODE: JDK9+"
+      jvm_arguments+=("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:$DEBUG_PORT")
+    else
+      echo "DEBUG MODE: JDK8"
+      jvm_arguments+=("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$DEBUG_PORT")
+    fi
+  fi
+
 jvm_args+=(
   "-jar"
   "$jar"
   "--nogui"
 )
+
+[[ $PLAYERS -gt -1 ]] && jvm_arguments+=("-s$PLAYERS")
+[[ ! -z $PLUGINS ]] && jvm_arguments+=("-P$PLUGINS")
+[[ ! -z $WORLDS ]] && jvm_arguments+=("-W$WORLDS")
+[[ $PORT -gt -1 ]] && jvm_arguments+=("-p$PORT")
 
   java "${jvm_args[@]}"
