@@ -21,6 +21,7 @@ if [[ $SERVER != vanilla* ]]; then
 fi
 
 [[ -f $SERVER ]] && JAR=$SERVER
+echo "$SERVER"
 
 [[ ! -f ./downloadServer ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/downloadServer" >/dev/null
 
