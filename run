@@ -32,7 +32,7 @@ set +a
 mkdir -p "$DIR" && cd "$DIR" || exit
 
 [[ -f ../downloadPlugins ]] && cp ../downloadPlugins .
-[[ ! -f downloadPlugins ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/startSetup" > /dev/null
+[[ ! -f downloadPlugins ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/downloadPlugins" > /dev/null
 
 chmod +x ./downloadPlugins
 ./downloadPlugins "${PLUGINS[@]}"
