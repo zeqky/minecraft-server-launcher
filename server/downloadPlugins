@@ -22,7 +22,7 @@ fi
 
 [[ -f $SERVER ]] && JAR=$SERVER
 
-[[ ! -f ./downloadServer.sh ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/downloadServer.sh" >/dev/null
+[[ ! -f ./downloadServer ]] && wget -q -c --content-disposition -P . -N "$REPO/$BRANCH/server/downloadServer" >/dev/null
 
-chmod +x ./downloadServer.sh
-./downloadServer.sh $SERVER
+chmod +x ./downloadServer
+./downloadServer $SERVER

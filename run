@@ -13,8 +13,7 @@ DIR=".server"
 MEMORY=4
 
 PLUGINS=(
-  "one"
-  "two"
+  'https://github.com/monun/auto-reloader/releases/download/0.0.5/auto-reloader-0.0.5.jar'
 )
 
 PLAYERS=100
